@@ -1,0 +1,125 @@
+Kubernetes Basics
+Step 1: Setting up the Kubernetes Cluster
+You have a few options here, but for simplicity, we'll use Minikube to set up a local cluster. This way, you'll have a working environment to experiment with.
+
+Install Minikube:
+
+Windows:
+
+Download the Minikube installer from Minikube Releases.
+
+Run the installer and follow the prompts.
+
+macOS:
+
+Install using Homebrew: brew install minikube.
+
+Linux:
+
+Download the latest release from the Minikube GitHub releases.
+
+Install using the commands provided for your distro.
+
+Start the Minikube Cluster: Run the following command to start Minikube:
+
+bash
+Copy
+Edit
+minikube start
+This will set up a local Kubernetes cluster on your machine.
+
+Verify the Cluster is Running: Once Minikube is up, verify your cluster is running:
+
+bash
+Copy
+Edit
+kubectl cluster-info
+You should see information about your Kubernetes cluster.
+
+Step 2: Basic kubectl Commands
+The primary way to interact with Kubernetes is through the kubectl command-line tool. Here's a list of basic commands you'll use frequently:
+
+Get cluster information:
+
+bash
+Copy
+Edit
+kubectl cluster-info
+List nodes in the cluster:
+
+bash
+Copy
+Edit
+kubectl get nodes
+List all pods:
+
+bash
+Copy
+Edit
+kubectl get pods
+Get detailed information about a pod:
+
+bash
+Copy
+Edit
+kubectl describe pod <pod-name>
+Get all resources (pods, services, deployments, etc.):
+
+bash
+Copy
+Edit
+kubectl get all
+View the logs of a pod:
+
+bash
+Copy
+Edit
+kubectl logs <pod-name>
+Step 3: Exploring Kubernetes Components
+Pods: The smallest unit in Kubernetes. A pod can contain one or more containers (usually one).
+
+Nodes: Physical or virtual machines that run the Kubernetes cluster.
+
+Cluster: A set of nodes that run containerized applications.
+
+Step 4: Creating Your First Pod
+Let's create a simple pod to get started. We'll use a basic Nginx container to start:
+
+Create a Pod YAML file (nginx-pod.yaml):
+
+yaml
+Copy
+Edit
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+Create the Pod using kubectl:
+
+bash
+Copy
+Edit
+kubectl apply -f nginx-pod.yaml
+Check the Pod's status:
+
+bash
+Copy
+Edit
+kubectl get pods
+Access the Pod logs to see if it’s running:
+
+bash
+Copy
+Edit
+kubectl logs nginx-pod
+Step 5: Deleting the Pod
+Once you're done, you can delete the pod with the following command:
+
+bash
+Copy
+Edit
+kubectl delete -f nginx-pod.yaml
