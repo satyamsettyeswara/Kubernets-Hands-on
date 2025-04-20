@@ -1,0 +1,94 @@
+Working with Pods and Deployments
+This lab covers:
+
+Creating deployments
+
+Scaling applications
+
+Performing rolling updates
+
+Checking rollout history
+
+Deleting deployments
+
+✅ Step 1: Create a Deployment
+We'll create a deployment that manages a set of Nginx pods.
+
+Create a file called nginx-deployment.yaml:
+
+yaml
+Copy
+Edit
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+Apply it:
+
+bash
+Copy
+Edit
+kubectl apply -f nginx-deployment.yaml
+✅ Step 2: Verify the Deployment
+Check that it's running:
+
+bash
+Copy
+Edit
+kubectl get deployments
+kubectl get pods
+✅ Step 3: Scale the Deployment
+Let's scale it to 4 replicas:
+
+bash
+Copy
+Edit
+kubectl scale deployment nginx-deployment --replicas=4
+Check that 4 pods are running:
+
+bash
+Copy
+Edit
+kubectl get pods
+✅ Step 4: Rolling Update
+Let’s update the image to a specific version:
+
+bash
+Copy
+Edit
+kubectl set image deployment nginx-deployment nginx=nginx:1.21
+Check the rollout status:
+
+bash
+Copy
+Edit
+kubectl rollout status deployment nginx-deployment
+✅ Step 5: Rollback
+If something goes wrong, you can roll back the update:
+
+bash
+Copy
+Edit
+kubectl rollout undo deployment nginx-deployment
+✅ Step 6: Delete the Deployment
+Once you're done:
+
+bash
+Copy
+Edit
+kubectl delete -f nginx-deployment.yaml
