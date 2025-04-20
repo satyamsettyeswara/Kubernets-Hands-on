@@ -1,0 +1,65 @@
+Services and Networking in Kubernetes
+This lab covers:
+
+Understanding services (ClusterIP, NodePort, LoadBalancer)
+
+Exposing a deployment
+
+Accessing your app inside and outside the cluster
+
+✅ Step 1: Recreate the Nginx Deployment
+Let’s bring back your nginx-deployment.yaml from Lab 2 (you can reuse the same file):
+
+bash
+Copy
+Edit
+kubectl apply -f nginx-deployment.yaml
+Make sure it’s running:
+
+bash
+Copy
+Edit
+kubectl get pods
+✅ Step 2: Expose the Deployment with a Service
+Let’s expose it as a NodePort service so you can access it from your host system:
+
+bash
+Copy
+Edit
+kubectl expose deployment nginx-deployment --port=80 --target-port=80 --type=NodePort
+Now check the service:
+
+bash
+Copy
+Edit
+kubectl get service
+You should see a NodePort assigned, something like 30000–32767.
+
+✅ Step 3: Access the Application
+Run this command to get your Minikube IP:
+
+bash
+Copy
+Edit
+minikube ip
+Then get the NodePort from the service output. Let’s say the port is 31567, and the Minikube IP is 192.168.49.2, then open this URL in your browser:
+
+cpp
+Copy
+Edit
+http://192.168.49.2:31567
+You should see the Nginx welcome page! 🎉
+
+✅ Step 4: Clean Up
+Delete the service:
+
+bash
+Copy
+Edit
+kubectl delete service nginx-deployment
+Delete the deployment if you want:
+
+bash
+Copy
+Edit
+kubectl delete -f nginx-deployment.yaml
