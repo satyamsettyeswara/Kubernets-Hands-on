@@ -70,3 +70,51 @@ Copy
 Edit
 kubectl delete service nginx-deployment
 kubectl delete pod debug-pod
+
+
+
+------------------------------
+
+LoadBalancer Service Type
+Only works on cloud environments like GKE, EKS, or AKS.
+
+On Minikube, it doesn’t create an actual cloud load balancer, but you can simulate it.
+
+So if you're curious to see how LoadBalancer works in Minikube, we can try it out using:
+
+bash
+Copy
+Edit
+minikube tunnel
+This gives you a fake LoadBalancer IP you can test locally.
+
+⚙️ Want to Try It? Here's How:
+Expose the deployment as LoadBalancer:
+
+bash
+Copy
+Edit
+kubectl expose deployment nginx-deployment --port=80 --target-port=80 --type=LoadBalancer
+Start Minikube tunnel (in a new terminal):
+
+bash
+Copy
+Edit
+minikube tunnel
+It may ask for sudo privileges.
+
+Check the service for external IP:
+
+bash
+Copy
+Edit
+kubectl get service nginx-deployment
+You’ll now see a proper EXTERNAL-IP assigned!
+
+Test it in your browser:
+
+cpp
+Copy
+Edit
+http://<EXTERNAL-IP>
+
