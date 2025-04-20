@@ -118,3 +118,71 @@ Copy
 Edit
 http://<EXTERNAL-IP>
 
+-----
+
+tep-by-Step: Simulated LoadBalancer in Minikube
+✅ Step 1: Recreate or Use the Nginx Deployment
+If it’s already running, skip this. Otherwise:
+
+bash
+Copy
+Edit
+kubectl apply -f nginx-deployment.yaml
+✅ Step 2: Expose It Using LoadBalancer
+bash
+Copy
+Edit
+kubectl expose deployment nginx-deployment --port=80 --target-port=80 --type=LoadBalancer
+Now check the service:
+
+bash
+Copy
+Edit
+kubectl get service nginx-deployment
+You'll likely see:
+
+pgsql
+Copy
+Edit
+NAME               TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)
+nginx-deployment   LoadBalancer   10.96.166.222    <pending>     80:xxxxx/TCP
+✅ Step 3: Start the Tunnel
+Open another terminal and run:
+
+bash
+Copy
+Edit
+minikube tunnel
+⚠️ You’ll probably be prompted for your password (it uses admin rights to set up routing).
+
+✅ Step 4: Get the External IP
+Now re-run this command in your first terminal:
+
+bash
+Copy
+Edit
+kubectl get service nginx-deployment
+You should now see a proper external IP like:
+
+arduino
+Copy
+Edit
+EXTERNAL-IP: 127.0.0.1 or 192.168.x.x
+✅ Step 5: Test It
+Open your browser and go to:
+
+cpp
+Copy
+Edit
+http://<EXTERNAL-IP>
+You should see the Nginx welcome page 🎉
+
+✅ Step 6: Clean Up (Optional)
+To delete the service:
+
+bash
+Copy
+Edit
+kubectl delete service nginx-deployment
+Stop the tunnel (just press Ctrl+C in the terminal running it).
+
