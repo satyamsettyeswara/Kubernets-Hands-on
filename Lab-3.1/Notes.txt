@@ -1,0 +1,72 @@
+Going Deeper into Kubernetes Networking
+We'll cover:
+
+How ClusterIP works
+
+Using kubectl port-forward for local testing
+
+Pod-to-Pod communication
+
+DNS inside the cluster
+
+✅ Step 1: Understanding ClusterIP (Default Service Type)
+Let’s expose the Nginx deployment using the default service type: ClusterIP:
+
+bash
+Copy
+Edit
+kubectl expose deployment nginx-deployment --port=80 --target-port=80 --type=ClusterIP
+Check the service:
+
+bash
+Copy
+Edit
+kubectl get service
+You’ll see an internal IP like 10.96.0.1—this is not accessible from outside, only from inside the cluster.
+
+✅ Step 2: Testing Access from Inside the Cluster
+To test this, we’ll spin up a temporary debug Pod with curl or wget:
+
+bash
+Copy
+Edit
+kubectl run debug-pod --image=busybox --restart=Never --stdin --tty
+Inside that shell, try:
+
+sh
+Copy
+Edit
+wget -O- http://nginx-deployment
+nginx-deployment is the DNS name of the service.
+
+Type exit to quit the shell.
+
+If that works, 🎉 your DNS and internal service networking are working fine.
+
+✅ Step 3: kubectl port-forward (Local Access Without NodePort)
+This is useful when you don’t want to expose a service permanently.
+
+Run:
+
+bash
+Copy
+Edit
+kubectl port-forward deployment/nginx-deployment 8080:80
+Then go to your browser and open:
+
+arduino
+Copy
+Edit
+http://localhost:8080
+You’ll see the Nginx welcome page — this is forwarding port 8080 on your host to port 80 on the deployment.
+
+Tip: Keep this in mind for testing things without needing a service or ingress.
+
+✅ Step 4: Clean Up (Optional)
+If you want to clean things:
+
+bash
+Copy
+Edit
+kubectl delete service nginx-deployment
+kubectl delete pod debug-pod
