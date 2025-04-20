@@ -1,0 +1,111 @@
+ConfigMaps and Secrets
+Learn how to manage configuration and sensitive data in Kubernetes.
+
+✅ Part 1: ConfigMaps – For Plain Config Data
+We’ll create a ConfigMap that stores environment variables, and mount them into a pod.
+
+🧪 Step 1: Create a ConfigMap
+bash
+Copy
+Edit
+kubectl create configmap app-config --from-literal=APP_MODE=production --from-literal=APP_VERSION=1.0.0
+View it:
+
+bash
+Copy
+Edit
+kubectl get configmap app-config -o yaml
+🧪 Step 2: Use ConfigMap in a Pod
+Create a file configmap-pod.yaml:
+
+yaml
+Copy
+Edit
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-demo
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command: ["sh", "-c", "env; sleep 3600"]
+      env:
+        - name: APP_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: APP_MODE
+        - name: APP_VERSION
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: APP_VERSION
+Apply it:
+
+bash
+Copy
+Edit
+kubectl apply -f configmap-pod.yaml
+Check the env values:
+
+bash
+Copy
+Edit
+kubectl exec -it configmap-demo -- env | grep APP_
+✅ Part 2: Secrets – For Sensitive Data
+Let’s store a database password securely.
+
+🧪 Step 1: Create a Secret
+bash
+Copy
+Edit
+kubectl create secret generic db-secret --from-literal=DB_PASSWORD='super-secret-pw'
+Check it:
+
+bash
+Copy
+Edit
+kubectl get secret db-secret -o yaml
+(Notice the value is Base64 encoded)
+
+🧪 Step 2: Use Secret in a Pod
+Create a file secret-pod.yaml:
+
+yaml
+Copy
+Edit
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-demo
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command: ["sh", "-c", "echo DB_PASSWORD=$DB_PASSWORD; sleep 3600"]
+      env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_PASSWORD
+Apply it:
+
+bash
+Copy
+Edit
+kubectl apply -f secret-pod.yaml
+Check the env value:
+
+bash
+Copy
+Edit
+kubectl logs secret-demo
+✅ Clean Up
+bash
+Copy
+Edit
+kubectl delete pod configmap-demo secret-demo
+kubectl delete configmap app-config
+kubectl delete secret db-se
